@@ -1,0 +1,36 @@
+# Compiled output
+/dist
+/build
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Testing
+/coverage
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# NestJS specific
+*.js.map
