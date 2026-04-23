@@ -1,5 +1,5 @@
 import {
-  Component, inject, signal, OnInit, computed,
+  Component, inject, signal, OnInit, computed, ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -35,6 +35,7 @@ import { FileUploadComponent } from '../../../shared/components/file-upload/file
 import { SignaturePadComponent } from '../../../shared/components/signature-pad/signature-pad.component';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { StatusLabelPipe } from '../../../shared/pipes/status-label.pipe';
+import { LightboxComponent, LightboxImagem } from '@shared/components/lightbox/lightbox.component';
 
 @Component({
   selector: 'app-execucao-detail',
@@ -45,7 +46,7 @@ import { StatusLabelPipe } from '../../../shared/pipes/status-label.pipe';
     MatInputModule, MatSelectModule, MatRadioModule, MatExpansionModule,
     MatDividerModule, MatChipsModule, MatProgressBarModule, MatTooltipModule,
     StatusBadgeComponent, PageHeaderComponent,
-    FileUploadComponent, SignaturePadComponent,
+    FileUploadComponent, SignaturePadComponent, LightboxComponent,
   ],
   template: `
     @if (carregando()) {
@@ -196,9 +197,10 @@ import { StatusLabelPipe } from '../../../shared/pipes/status-label.pipe';
                               <div class="relative">
                                 @if (uploadService.isImagem(ev.nomeOriginal)) {
                                   <img
-                                    [src]="uploadService.urlArquivo(ev.arquivoUrl)"
-                                    class="w-16 h-16 object-cover rounded-lg border border-gray-200"
-                                  />
+  [src]="uploadService.urlArquivo(ev.arquivoUrl)"
+  class="w-16 h-16 object-cover rounded-lg border border-gray-200 cursor-pointer hover:opacity-80 transition-opacity"
+  (click)="abrirLightbox(item.evidencias, $index)"
+/>
                                 } @else {
                                   <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
                                     <mat-icon class="text-red-400">picture_as_pdf</mat-icon>
@@ -422,7 +424,9 @@ import { StatusLabelPipe } from '../../../shared/pipes/status-label.pipe';
           </mat-card-content>
         </mat-card>
       }
-    }
+    <!-- Lightbox -->
+<app-lightbox #lightboxRef />
+}
   `,
 })
 export class ExecucaoDetailComponent implements OnInit {
@@ -432,6 +436,7 @@ export class ExecucaoDetailComponent implements OnInit {
   private readonly appStore = inject(AppStore);
   private readonly fb = inject(FormBuilder);
   readonly uploadService = inject(UploadService);
+  readonly lightbox = signal<LightboxComponent | null>(null);
 
   readonly execucao = signal<ChecklistExecucao | null>(null);
   readonly carregando = signal(true);
@@ -619,6 +624,15 @@ export class ExecucaoDetailComponent implements OnInit {
       },
       error: () => this.assinando.set(false),
     });
+  }
+
+  @ViewChild('lightboxRef') lightboxRef!: LightboxComponent;
+
+  abrirLightbox(evidencias: any[], indice: number): void {
+    const imagens: LightboxImagem[] = evidencias
+      .filter(ev => this.uploadService.isImagem(ev.nomeOriginal))
+      .map(ev => ({ url: this.uploadService.urlArquivo(ev.arquivoUrl), nome: ev.nomeOriginal }));
+    this.lightboxRef.abrir(imagens, indice);
   }
 
   private atualizarItem(atualizado: ItemExecucao): void {

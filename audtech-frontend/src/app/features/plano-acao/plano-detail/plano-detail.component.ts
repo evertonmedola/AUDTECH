@@ -1,5 +1,5 @@
 import {
-  Component, inject, signal, OnInit, computed,
+  Component, inject, signal, OnInit, computed, ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -28,6 +28,7 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 import { FileUploadComponent } from '../../../shared/components/file-upload/file-upload.component';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { StatusLabelPipe } from '../../../shared/pipes/status-label.pipe';
+import { LightboxImagem, LightboxComponent } from '@shared/components/lightbox/lightbox.component';
 
 @Component({
   selector: 'app-plano-detail',
@@ -38,7 +39,7 @@ import { StatusLabelPipe } from '../../../shared/pipes/status-label.pipe';
     MatInputModule, MatSelectModule, MatDividerModule, MatTooltipModule,
     MatDatepickerModule, MatNativeDateModule, MatExpansionModule,
     StatusBadgeComponent, PageHeaderComponent, FileUploadComponent,
-    EmptyStateComponent,
+    EmptyStateComponent, LightboxComponent,
   ],
   template: `
     @if (carregando()) {
@@ -130,9 +131,10 @@ import { StatusLabelPipe } from '../../../shared/pipes/status-label.pipe';
                       <div class="relative">
                         @if (uploadService.isImagem(ev.nomeOriginal)) {
                           <img
-                            [src]="uploadService.urlArquivo(ev.arquivoUrl)"
-                            class="w-16 h-16 object-cover rounded-lg border border-gray-200"
-                          />
+  [src]="uploadService.urlArquivo(ev.arquivoUrl)"
+  class="w-16 h-16 object-cover rounded-lg border border-gray-200 cursor-pointer hover:opacity-80 transition-opacity"
+  (click)="abrirLightbox(acao.evidencias, $index)"
+/>
                         } @else {
                           <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
                             <mat-icon class="text-red-400">picture_as_pdf</mat-icon>
@@ -208,7 +210,9 @@ import { StatusLabelPipe } from '../../../shared/pipes/status-label.pipe';
           </mat-expansion-panel>
         }
       </mat-accordion>
-    }
+    <!-- Lightbox -->
+<app-lightbox #lightboxRef />
+}
   `,
 })
 export class PlanoDetailComponent implements OnInit {
@@ -278,6 +282,15 @@ export class PlanoDetailComponent implements OnInit {
       this.justificandoAcao.set(acao.id);
     }
     this.atualizarAcao(acao, { status: novoStatus });
+  }
+
+  @ViewChild('lightboxRef') lightboxRef!: LightboxComponent;
+
+  abrirLightbox(evidencias: any[], indice: number): void {
+    const imagens: LightboxImagem[] = evidencias
+      .filter(ev => this.uploadService.isImagem(ev.nomeOriginal))
+      .map(ev => ({ url: this.uploadService.urlArquivo(ev.arquivoUrl), nome: ev.nomeOriginal }));
+    this.lightboxRef.abrir(imagens, indice);
   }
 
   atualizarAcao(acao: AcaoCorretiva, dto: Partial<AcaoCorretiva>): void {
