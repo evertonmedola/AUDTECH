@@ -290,6 +290,7 @@ export class TemplateFormComponent implements OnInit {
     { valor: TipoNorma.VIGILANCIA_SANITARIA, label: 'Vigilância Sanitária' },
     { valor: TipoNorma.ISO_45001, label: 'ISO 45001 — Segurança Trabalhista' },
     { valor: TipoNorma.ISO_14001, label: 'ISO 14001 — Ambiental' },
+    { valor: TipoNorma.SEM_NORMA, label: 'Sem Norma' },
   ];
 
   readonly form = this.fb.group({

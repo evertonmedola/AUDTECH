@@ -38,6 +38,7 @@ export enum TipoNorma {
   VIGILANCIA_SANITARIA = 'VIGILANCIA_SANITARIA',
   ISO_45001 = 'ISO_45001',
   ISO_14001 = 'ISO_14001',
+  SEM_NORMA = 'SEM_NORMA',
 }
 
 export enum Criticidade {
@@ -101,6 +102,7 @@ export const TIPO_NORMA_LABELS: Record<TipoNorma, string> = {
   [TipoNorma.VIGILANCIA_SANITARIA]: 'Vigilância Sanitária',
   [TipoNorma.ISO_45001]: 'ISO 45001 — Segurança Trabalhista',
   [TipoNorma.ISO_14001]: 'ISO 14001 — Ambiental',
+  [TipoNorma.SEM_NORMA]: 'Sem Norma',
 };
 
 export const CRITICIDADE_LABELS: Record<Criticidade, string> = {

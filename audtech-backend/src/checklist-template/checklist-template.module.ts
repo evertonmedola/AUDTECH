@@ -11,4 +11,4 @@ import { ChecklistTemplateController } from './checklist-template.controller';
   controllers: [ChecklistTemplateController],
   exports: [ChecklistTemplateService],
 })
-export class ChecklistTemplateModule {}
+export class ChecklistTemplateModule { }
