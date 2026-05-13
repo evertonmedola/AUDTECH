@@ -25,6 +25,7 @@ import { PlanoAcaoModule } from './plano-acao/plano-acao.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { UploadModule } from './upload/upload.module';
 import { NotificacaoModule } from './notificacao/notificacao.module';
+import { IaModule } from './ia/ia.module';
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { NotificacaoModule } from './notificacao/notificacao.module';
     DashboardModule,
     UploadModule,
     NotificacaoModule,
+    IaModule,
   ],
 })
 export class AppModule {}
