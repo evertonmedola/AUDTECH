@@ -1,0 +1,41 @@
+
+> audtech-frontend@1.0.0 start
+> ng serve --host 127.0.0.1 --port 4201
+
+[33m>[39m Building...
+[32m√[39m Building...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m                           [2m | [22m [1mRaw size[22m
+[32mstyles.css[39m         [2m | [22m[2mstyles[22m                          [2m | [22m[36m132.40 kB[39m[2m | [22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m                            [2m | [22m  [36m7.00 kB[39m[2m | [22m
+[32mchunk-6UV7I6PI.js[39m  [2m | [22m[2m-[22m                               [2m | [22m  [36m4.22 kB[39m[2m | [22m
+[32mchunk-MUB2EMBO.js[39m  [2m | [22m[2m-[22m                               [2m | [22m  [36m3.03 kB[39m[2m | [22m
+[32mchunk-OVQHIFPP.js[39m  [2m | [22m[2m-[22m                               [2m | [22m  [36m2.08 kB[39m[2m | [22m
+[32mchunk-VUJOFXKG.js[39m  [2m | [22m[2m-[22m                               [2m | [22m[36m938 bytes[39m[2m | [22m
+[32mchunk-42VBNJ7Y.js[39m  [2m | [22m[2m-[22m                               [2m | [22m[36m695 bytes[39m[2m | [22m
+[32mpolyfills.js[39m       [2m | [22m[2mpolyfills[22m                       [2m | [22m [36m95 bytes[39m[2m | [22m
+
+[1m [22m                  [2m | [22m[1mInitial total[22m                   [2m | [22m[1m150.46 kB[22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m                           [2m | [22m [1mRaw size[22m
+[32mchunk-BFG65VCE.js[39m  [2m | [22m[2mexecucao-detail-component[22m       [2m | [22m [36m83.10 kB[39m[2m | [22m
+[32mchunk-6TFQYYI3.js[39m  [2m | [22m[2mdashboard-component[22m             [2m | [22m [36m73.06 kB[39m[2m | [22m
+[32mchunk-PNTRNJ22.js[39m  [2m | [22m[2mtemplate-form-component[22m         [2m | [22m [36m60.28 kB[39m[2m | [22m
+[32mchunk-KMJ2X3AA.js[39m  [2m | [22m[2mempresa-usuarios-component[22m      [2m | [22m [36m56.41 kB[39m[2m | [22m
+[32mchunk-6SYCPSOZ.js[39m  [2m | [22m[2mplano-detail-component[22m          [2m | [22m [36m39.07 kB[39m[2m | [22m
+[32mchunk-5LNLDHPE.js[39m  [2m | [22m[2mempresa-form-component[22m          [2m | [22m [36m28.03 kB[39m[2m | [22m
+[32mchunk-BPNLD3FH.js[39m  [2m | [22m[2m-[22m                               [2m | [22m [36m25.21 kB[39m[2m | [22m
+[32mchunk-4CWHFMCB.js[39m  [2m | [22m[2mempresa-list-component[22m          [2m | [22m [36m23.52 kB[39m[2m | [22m
+[32mchunk-KLXUT4M3.js[39m  [2m | [22m[2mtemplates-globais-form-component[22m[2m | [22m [36m22.60 kB[39m[2m | [22m
+[32mchunk-RUDWPOHW.js[39m  [2m | [22m[2musuario-list-component[22m          [2m | [22m [36m20.89 kB[39m[2m | [22m
+[32mchunk-LYJGQE4V.js[39m  [2m | [22m[2mexecucao-list-component[22m         [2m | [22m [36m20.63 kB[39m[2m | [22m
+[32mchunk-CRDFURDR.js[39m  [2m | [22m[2mtemplate-list-component[22m         [2m | [22m [36m19.26 kB[39m[2m | [22m
+[32mchunk-HGHIOHBH.js[39m  [2m | [22m[2musuario-form-component[22m          [2m | [22m [36m18.62 kB[39m[2m | [22m
+[32mchunk-T4TBO7UA.js[39m  [2m | [22m[2mmain-layout-component[22m           [2m | [22m [36m18.17 kB[39m[2m | [22m
+[32mchunk-X4N7X5ER.js[39m  [2m | [22m[2mtemplates-globais-list-component[22m[2m | [22m [36m17.27 kB[39m[2m | [22m
+[2m...and 24 more lazy chunks files. Use "--verbose" to show all the files.[22m
+
+Application bundle generation complete. [4.318 seconds] - 2026-05-23T00:46:55.463Z
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m4201[22m/[39m

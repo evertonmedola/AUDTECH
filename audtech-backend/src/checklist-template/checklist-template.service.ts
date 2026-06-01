@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsWhere, Or } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ChecklistTemplate } from './checklist-template.entity';
 import { ItemTemplate } from './item-template.entity';
 import {

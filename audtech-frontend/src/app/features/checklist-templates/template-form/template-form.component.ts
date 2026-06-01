@@ -173,81 +173,191 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
       </mat-sidenav-content>
 
       <!-- ── Sidenav IA ── -->
-      <mat-sidenav #sidenavIA position="end" mode="over" style="width:380px">
-        <div class="flex flex-col h-full p-5 gap-4">
+      <mat-sidenav #sidenavIA position="end" mode="over" class="ai-sidenav">
+        <div class="flex h-full flex-col overflow-hidden bg-slate-50">
 
-          <div class="flex items-center justify-between">
-            <h3 class="text-base font-semibold text-gray-800 flex items-center gap-2">
-              <mat-icon class="text-purple-500">auto_awesome</mat-icon>
-              Gerar com IA
-            </h3>
-            <button mat-icon-button type="button" (click)="fecharSidenavIA()">
-              <mat-icon>close</mat-icon>
-            </button>
+          <div class="border-b border-slate-200 bg-white px-6 py-5">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-start gap-3">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-700">
+                  <mat-icon>auto_awesome</mat-icon>
+                </div>
+                <div>
+                  <p class="text-xs font-semibold uppercase text-cyan-700">Assistente IA</p>
+                  <h3 class="text-lg font-semibold text-slate-900">Gerar checklist</h3>
+                  <p class="mt-1 text-sm leading-5 text-slate-500">
+                    Descreva o contexto da auditoria e revise a sugestão antes de aplicar.
+                  </p>
+                </div>
+              </div>
+              <button mat-icon-button type="button" (click)="fecharSidenavIA()" matTooltip="Fechar painel">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
           </div>
 
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Descreva o checklist</mat-label>
-            <textarea
-              matInput
-              [(ngModel)]="descricaoIA"
-              rows="5"
-              placeholder="Descreva o checklist que você precisa. Ex: inspeção de equipamentos elétricos para norma ISO 45001..."
-            ></textarea>
-          </mat-form-field>
+          <div class="ai-scroll flex-1 overflow-y-auto px-6 py-5">
+            <section class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+              <div class="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <p class="text-sm font-semibold text-slate-800">Prompt</p>
+                  <p class="text-xs text-slate-500">Inclua norma, área auditada e objetivo do checklist.</p>
+                </div>
+                <span
+                  class="rounded-full px-2.5 py-1 text-xs font-medium"
+                  [class.bg-emerald-50]="promptIAValido()"
+                  [class.text-emerald-700]="promptIAValido()"
+                  [class.bg-slate-100]="!promptIAValido()"
+                  [class.text-slate-500]="!promptIAValido()"
+                >
+                  {{ descricaoIA.trim().length }}/10
+                </span>
+              </div>
 
-          <button
-            mat-flat-button
-            color="primary"
-            type="button"
-            (click)="gerarComIA()"
-            [disabled]="gerandoIA() || descricaoIA.length < 10"
-          >
+              <mat-form-field appearance="outline" class="ai-prompt-field w-full">
+                <mat-label>O que a IA deve montar?</mat-label>
+                <textarea
+                  matInput
+                  [(ngModel)]="descricaoIA"
+                  rows="7"
+                  placeholder="Descreva o checklist que você precisa. Ex: inspeção de equipamentos elétricos para norma ISO 45001..."
+                ></textarea>
+              </mat-form-field>
+
+              <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                @for (exemplo of exemplosPromptIA; track exemplo.titulo) {
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    class="ai-example-button"
+                    (click)="usarExemploPromptIA(exemplo.prompt)"
+                    [matTooltip]="exemplo.prompt"
+                  >
+                    <mat-icon>{{ exemplo.icone }}</mat-icon>
+                    {{ exemplo.titulo }}
+                  </button>
+                }
+              </div>
+
+              <button
+                mat-flat-button
+                color="primary"
+                type="button"
+                class="mt-4 w-full"
+                (click)="gerarComIA()"
+                [disabled]="gerandoIA() || !promptIAValido()"
+              >
+                @if (gerandoIA()) {
+                  <span class="inline-flex items-center justify-center gap-2">
+                    <mat-spinner diameter="18" />
+                    <span>Gerando sugestão...</span>
+                  </span>
+                } @else {
+                  <span class="inline-flex items-center justify-center gap-2">
+                    <mat-icon>auto_awesome</mat-icon>
+                    <span>Gerar sugestão</span>
+                  </span>
+                }
+              </button>
+            </section>
+
             @if (gerandoIA()) {
-              <mat-spinner diameter="18" class="inline-block mr-2" />
-              Gerando...
-            } @else {
-              <mat-icon>auto_awesome</mat-icon> Gerar
+              <section class="mt-4 rounded-lg border border-indigo-100 bg-indigo-50/60 p-4">
+                <div class="mb-3 flex items-center gap-3">
+                  <mat-spinner diameter="24" />
+                  <div>
+                    <p class="text-sm font-semibold text-indigo-900">Analisando o pedido</p>
+                    <p class="text-xs text-indigo-700">A IA está estruturando título, norma e itens por grupo.</p>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <div class="h-3 w-3/4 rounded bg-indigo-100"></div>
+                  <div class="h-3 w-11/12 rounded bg-indigo-100"></div>
+                  <div class="h-3 w-2/3 rounded bg-indigo-100"></div>
+                </div>
+              </section>
             }
-          </button>
 
           <!-- Preview dos itens gerados -->
           @if (sugestaoIA()) {
-            <div class="flex-1 overflow-y-auto border border-gray-200 rounded-xl p-4 bg-gray-50">
-              <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Título</p>
-              <p class="text-sm text-gray-800 font-medium mb-3">{{ sugestaoIA()!.titulo }}</p>
-
-              <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Norma</p>
-              <p class="text-sm text-gray-800 mb-3">{{ sugestaoIA()!.tipoNorma }}</p>
-
-              <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Itens</p>
-              @for (grupo of gruposIA(); track grupo.nome) {
-                <div class="mb-3">
-                  <p class="text-xs font-semibold text-purple-600 mb-1">{{ grupo.nome }}</p>
-                  @for (item of grupo.itens; track item.ordem) {
-                    <p class="text-xs text-gray-700 py-1 border-b border-gray-100 last:border-0">
-                      {{ item.ordem + 1 }}. {{ item.descricao }}
-                    </p>
-                  }
+            <section class="mt-4 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+              <div class="border-b border-slate-200 bg-slate-900 px-4 py-4 text-white">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="text-xs font-semibold uppercase text-cyan-200">Sugestão pronta</p>
+                    <h4 class="mt-1 text-base font-semibold leading-6">{{ sugestaoIA()!.titulo }}</h4>
+                  </div>
+                  <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold">
+                    {{ totalItensIA() }} itens
+                  </span>
                 </div>
-              }
-            </div>
+                <p class="mt-3 text-sm leading-5 text-slate-200">{{ sugestaoIA()!.descricao }}</p>
+              </div>
+              <div class="grid grid-cols-2 border-b border-slate-200 bg-slate-50">
+                <div class="border-r border-slate-200 p-4">
+                  <p class="text-xs font-semibold uppercase text-slate-500">Norma</p>
+                  <p class="mt-1 text-sm font-semibold text-slate-800">{{ normaLabel(sugestaoIA()!.tipoNorma) }}</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-xs font-semibold uppercase text-slate-500">Grupos</p>
+                  <p class="mt-1 text-sm font-semibold text-slate-800">{{ gruposIA().length }}</p>
+                </div>
+              </div>
 
-            <div class="flex gap-2 pt-2">
-              <button mat-stroked-button type="button" class="flex-1" (click)="fecharSidenavIA()">
-                Cancelar
-              </button>
-              <button mat-flat-button color="primary" type="button" class="flex-1" (click)="aplicarSugestaoIA()">
-                <mat-icon>check</mat-icon> Aplicar ao formulário
-              </button>
-            </div>
+              <div class="divide-y divide-slate-100">
+                @for (grupo of gruposIA(); track grupo.nome) {
+                  <div class="p-4">
+                    <div class="mb-3 flex items-center justify-between gap-3">
+                      <p class="text-sm font-semibold text-indigo-700">{{ grupo.nome || 'Sem grupo' }}</p>
+                      <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                        {{ grupo.itens.length }} itens
+                      </span>
+                    </div>
+                    <div class="space-y-2">
+                      @for (item of grupo.itens; track item.ordem) {
+                        <div class="flex gap-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
+                          <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-xs font-semibold text-slate-600">
+                            {{ item.ordem + 1 }}
+                          </span>
+                          <p class="text-sm leading-5 text-slate-700">{{ item.descricao }}</p>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </section>
+
           }
 
           @if (!sugestaoIA() && !gerandoIA()) {
-            <p class="text-xs text-gray-400 text-center mt-2">
-              Descreva o tipo de checklist que você precisa e a IA irá gerar os itens automaticamente.
-            </p>
+            <section class="mt-4 rounded-lg border border-dashed border-slate-300 bg-white px-4 py-5 text-center">
+              <mat-icon class="text-slate-300">chat_bubble_outline</mat-icon>
+              <p class="mt-2 text-sm font-medium text-slate-600">A sugestão aparecerá aqui</p>
+              <p class="mt-1 text-xs leading-5 text-slate-500">
+                Depois de gerar, você poderá revisar os campos antes de preencher o formulário.
+              </p>
+            </section>
           }
+          </div>
+
+          <div class="border-t border-slate-200 bg-white px-6 py-4">
+            @if (sugestaoIA()) {
+              <div class="flex gap-2">
+                <button mat-stroked-button type="button" class="flex-1" (click)="fecharSidenavIA()">
+                  Cancelar
+                </button>
+                <button mat-flat-button color="primary" type="button" class="flex-1" (click)="aplicarSugestaoIA()">
+                  <mat-icon>check</mat-icon>
+                  Aplicar
+                </button>
+              </div>
+            } @else {
+              <button mat-stroked-button type="button" class="w-full" (click)="fecharSidenavIA()">
+                Fechar
+              </button>
+            }
+          </div>
         </div>
       </mat-sidenav>
 
@@ -260,6 +370,32 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
     }
     mat-sidenav-content {
       padding: 0;
+    }
+    .ai-sidenav {
+      width: min(520px, 100vw) !important;
+    }
+    :host ::ng-deep .ai-sidenav .mat-drawer-inner-container {
+      overflow: hidden;
+    }
+    .ai-scroll {
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 transparent;
+    }
+    .ai-prompt-field textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    .ai-example-button {
+      min-width: 0;
+      padding-inline: 10px;
+    }
+    .ai-example-button mat-icon {
+      margin-right: 4px;
+    }
+    @media (max-width: 640px) {
+      .ai-sidenav {
+        width: 100vw !important;
+      }
     }
   `],
 })
@@ -293,6 +429,24 @@ export class TemplateFormComponent implements OnInit {
     { valor: TipoNorma.SEM_NORMA, label: 'Sem Norma' },
   ];
 
+  readonly exemplosPromptIA = [
+    {
+      titulo: 'Sanitária',
+      icone: 'restaurant',
+      prompt: 'Checklist para auditoria sanitária em cozinha industrial, com foco em higiene, armazenamento, validade e rastreabilidade.',
+    },
+    {
+      titulo: 'ISO 9001',
+      icone: 'verified',
+      prompt: 'Checklist ISO 9001 para processo de atendimento ao cliente, cobrindo registros, indicadores, tratativas e melhoria contínua.',
+    },
+    {
+      titulo: 'Segurança',
+      icone: 'health_and_safety',
+      prompt: 'Checklist de segurança do trabalho para inspeção de equipamentos elétricos, EPIs, sinalização e procedimentos de bloqueio.',
+    },
+  ];
+
   readonly form = this.fb.group({
     titulo: ['', [Validators.required, Validators.maxLength(200)]],
     tipoNorma: ['', Validators.required],
@@ -304,6 +458,22 @@ export class TemplateFormComponent implements OnInit {
 
   getItemGroup(i: number): FormGroup {
     return this.itens.at(i) as FormGroup;
+  }
+
+  promptIAValido(): boolean {
+    return this.descricaoIA.trim().length >= 10;
+  }
+
+  usarExemploPromptIA(prompt: string): void {
+    this.descricaoIA = prompt;
+  }
+
+  totalItensIA(): number {
+    return this.sugestaoIA()?.itens.length ?? 0;
+  }
+
+  normaLabel(tipoNorma: string): string {
+    return this.normas.find(norma => norma.valor === tipoNorma)?.label ?? tipoNorma;
   }
 
   gruposIA(): { nome: string; itens: ChecklistGeradoIA['itens'] }[] {
@@ -369,10 +539,10 @@ export class TemplateFormComponent implements OnInit {
   }
 
   gerarComIA(): void {
-    if (this.descricaoIA.length < 10) return;
+    if (!this.promptIAValido()) return;
     this.gerandoIA.set(true);
     this.sugestaoIA.set(null);
-    this.iaService.gerarChecklist(this.descricaoIA).subscribe({
+    this.iaService.gerarChecklist(this.descricaoIA.trim()).subscribe({
       next: (resultado) => {
         this.sugestaoIA.set(resultado);
         this.gerandoIA.set(false);
