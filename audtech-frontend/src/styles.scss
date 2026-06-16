@@ -38,8 +38,9 @@ html, body {
 // ── Utilitários globais ───────────────────────────────────────────────────────
 .page-container {
   padding: 24px;
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  height: 93%;
 }
 
 .card-shadow {
